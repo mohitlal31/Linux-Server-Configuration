@@ -40,14 +40,14 @@ Below, I have listed all the steps I undertook to configure this server.
   - Configure the Uncomplicated Firewall (UFW) to only allow incoming connections
     for SSH (port 2200), HTTP (port 80), and NTP (port 123)
     ```
-    sudo ufw default deny incoming
-    sudo ufw default allow outgoing
-    sudo ufw allow 2200/tcp
-    sudo ufw allow ntp
-    sudo ufw allow www
-    sudo ufw show added
-    sudo ufw enable
-    sudo ufw status
+      sudo ufw default deny incoming
+      sudo ufw default allow outgoing
+      sudo ufw allow 2200/tcp
+      sudo ufw allow ntp
+      sudo ufw allow www
+      sudo ufw show added
+      sudo ufw enable
+      sudo ufw status
     ```
 
   Now, you should be able to SSH into the lightsail instance from port 2200
@@ -70,9 +70,9 @@ Below, I have listed all the steps I undertook to configure this server.
   run `ssh-keygen -y -f .ssh/grader.pem`
   - Copy the output and paste it in the linux instance as below
     ```
-    su - grader
-    mkdir .ssh
-    nano .ssh/authorized_keys
+      su - grader
+      mkdir .ssh
+      nano .ssh/authorized_keys
     ```
   - Paste the output and save
   
@@ -80,8 +80,8 @@ Below, I have listed all the steps I undertook to configure this server.
 
   - Install apache and mod_wsgi
   ```
-  sudo apt-get install apache2
-  sudo apt-get install libapache2-mod-wsgi
+      sudo apt-get install apache2
+      sudo apt-get install libapache2-mod-wsgi
   ```
 
   - Copy Paste the lightsail IP Address into your browser. The default
@@ -92,19 +92,19 @@ Below, I have listed all the steps I undertook to configure this server.
 
   - Create a database 'catalog' with requisite permissions
   ```
-  sudo su - postgresql
-  psql
-  CREATE DATABASE CATALOG
-  CREATE USER catalog WITH PASSWORD 'catalog'
-  GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog
+      sudo su - postgresql
+      psql
+      CREATE DATABASE CATALOG
+      CREATE USER catalog WITH PASSWORD 'catalog'
+      GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog
   ```
 
   - Create a project folder and clone the project repository
   ```
-  sudo cd /var/www
-  sudo mkdir catalog
-  sudo git clone https://github.com/mohitlal31/Essential-Contact catalog
-  cd catalog
+      sudo cd /var/www
+      sudo mkdir catalog
+      sudo git clone https://github.com/mohitlal31/Essential-Contact catalog
+      cd catalog
   ```
 
   - Rename file essential_services.py present inside the repo</br>
@@ -116,13 +116,13 @@ Below, I have listed all the steps I undertook to configure this server.
 
   - Setup virtual Environment
   ```
-  sudo apt-get install python-pip
-  sudo pip install virtualenv
+    sudo apt-get install python-pip
+    sudo pip install virtualenv
   ```
-  Inside /var/www/catalog/catalog
+   Inside /var/www/catalog/catalog
   ```
-  sudo virtualenv venv
-  source venv/bin/activate
+    sudo virtualenv venv
+    source venv/bin/activate
   ```
 
   - Install all python project dependencies
@@ -158,12 +158,13 @@ Below, I have listed all the steps I undertook to configure this server.
 
   - Create the wsgi file
   ```
-  cd /var/www/catalog
-  sudo nano catalog.wsgi
+    cd /var/www/catalog
+    sudo nano catalog.wsgi
   ```
 
   - Paste the following code into the wsgi file
-  ```#!/usr/bin/python
+  ```
+     #!/usr/bin/python
      import sys
      import logging
      logging.basicConfig(filename='/var/www/catalog/python_logs.logs', stream=sys.stderr)
@@ -199,5 +200,5 @@ Below, I have listed all the steps I undertook to configure this server.
 ### Credits
 
   - [xip.io](http://xip.io/)
-  - [How To Deploy a Flask Application on an Ubuntu VPS] (https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+  - [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
   - [Flask Docs](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/)

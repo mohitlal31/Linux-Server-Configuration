@@ -8,7 +8,9 @@ to host the [item-catalog web application](https://github.com/mohitlal31/Essenti
 to set up the web server and [Postgresql](https://www.postgresql.org/) for the database
 server on the ubuntu virtual host.
 
-Below, I have listed all the steps I undertook to configure this server.
+Below, I have listed all the steps I undertook to configure this server.</br>
+**IP Address:** 13.234.78.91</br>
+**Port:** 2200
 
 ### 1. SSH from local machine to the Lightsail virtual server instance
 

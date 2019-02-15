@@ -1,10 +1,10 @@
 # Linux Server Configuration
 
 A project to set up a web and database server on the cloud hosting
-service [Amazon Lightsail] (https://aws.amazon.com/lightsail/).
+service [Amazon Lightsail](https://aws.amazon.com/lightsail/).
 A baseline Ubuntu instance was set up on Amazon Lightsail
-to host the [item-catalog web application] (https://github.com/mohitlal31/Essential-Contacts).
-(Apache)[https://httpd.apache.org/] was used
+to host the [item-catalog web application](https://github.com/mohitlal31/Essential-Contacts).
+[Apache](https://httpd.apache.org/) was used
 to set up the web server and [Postgresql](https://www.postgresql.org/) for the database
 server on the ubuntu virtual host.
 
@@ -15,7 +15,7 @@ Below, I have listed all the steps I undertook to configure this server.
   - Download the private key file from Lighsail to the .ssh folder in your local
     machine.
   - From your shell terminal, run
-    `ssh -i ".ssh/<private_key_file>" ubuntu@<ip_address> -v -p 22`
+    </br>`ssh -i ".ssh/<private_key_file>" ubuntu@<ip_address> -v -p 22`
 
 ### 2. Install Updates
 
@@ -27,29 +27,31 @@ Below, I have listed all the steps I undertook to configure this server.
 ### 3. Change the default SSH port 22 to non-standard port 2200
 
   - Add a custom firewall rule in the lightsail networking tab to
-    allow connections on Port 2200
+    allow connections on Port 2200</br>
     **Application: Custom, Protocol: TCP, Port: 2200**
   - Edit the server config file `sudo nano /etc/ssh/sshd_config`
     Add the line `Port 2200` and save(Ctrl-O, Enter, Ctrl-X)
   - Restart SSH `sudo service ssh restart`
 
   - Add a custom firewall rule in the lightsail networking tab to
-    allow HTTP connections on Port 80
+    allow HTTP connections on Port 80</br>
     **Application: HTTP, Protocol: TCP, Port: 80**
 
   - Configure the Uncomplicated Firewall (UFW) to only allow incoming connections
     for SSH (port 2200), HTTP (port 80), and NTP (port 123)
-    - `sudo ufw default deny incoming`
-    - `sudo ufw default allow outgoing`
-    - `sudo ufw allow 2200/tcp`
-    - `sudo ufw allow ntp`
-    - `sudo ufw allow www`
-    - `sudo ufw show added`
-    - `sudo ufw enable`
-    - `sudo ufw status`
+    ```
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+    sudo ufw allow 2200/tcp
+    sudo ufw allow ntp
+    sudo ufw allow www
+    sudo ufw show added
+    sudo ufw enable
+    sudo ufw status
+    ```
 
   Now, you should be able to SSH into the lightsail instance from port 2200
-  with `ssh -i ".ssh/<private_key_file>" ubuntu@<ip_address> -v -p 2200`
+  with </br>`ssh -i ".ssh/<private_key_file>" ubuntu@<ip_address> -v -p 2200`</br>
   If you connect successfully, delete the firewall rule in the lightsail console
   that allows connections on port 22
 
@@ -67,57 +69,69 @@ Below, I have listed all the steps I undertook to configure this server.
   - On the local terminal (not the server),
   run `ssh-keygen -y -f .ssh/grader.pem`
   - Copy the output and paste it in the linux instance as below
-      - su - grader
-      - mkdir .ssh
-      - nano .ssh/authorized_keys
+    ```
+    su - grader
+    mkdir .ssh
+    nano .ssh/authorized_keys
+    ```
   - Paste the output and save
-
+  
 ### 6. Prepare to deploy the project
 
   - Install apache and mod_wsgi
-  `sudo apt-get install apache2`
-  `sudo apt-get install libapache2-mod-wsgi`
+  ```
+  sudo apt-get install apache2
+  sudo apt-get install libapache2-mod-wsgi
+  ```
 
   - Copy Paste the lightsail IP Address into your browser. The default
   apache homepage should open up.
 
   - Install Postgresql
-  `sudo apt-get install postgresql`
+  </br>`sudo apt-get install postgresql`
 
   - Create a database 'catalog' with requisite permissions
-  `sudo su - postgresql`
-  `psql`
-  `CREATE DATABASE CATALOG`
-  `CREATE USER catalog WITH PASSWORD 'catalog'`
-  `GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog`
+  ```
+  sudo su - postgresql
+  psql
+  CREATE DATABASE CATALOG
+  CREATE USER catalog WITH PASSWORD 'catalog'
+  GRANT ALL PRIVILEGES ON DATABASE catalog TO catalog
+  ```
 
   - Create a project folder and clone the project repository
-  `sudo cd /var/www`
-  `sudo mkdir catalog`
-  `sudo git clone https://github.com/mohitlal31/Essential-Contact catalog`
-  `cd catalog`
+  ```
+  sudo cd /var/www
+  sudo mkdir catalog
+  sudo git clone https://github.com/mohitlal31/Essential-Contact catalog
+  cd catalog
+  ```
 
-  - Rename file essential_services.py present inside the repo
+  - Rename file essential_services.py present inside the repo</br>
   `sudo mv essential_services.py __init__.py`
 
   - change SQLAlchemy engine in database.setup.py to handle postgresql databases
-  From `engine = create_engine('sqlite:///itemcatalog.db')`
-  To `create_engine('postgresql://catalog:catalog@localhost/catalog')`
+  </br>From `engine = create_engine('sqlite:///itemcatalog.db')`
+  </br>To `create_engine('postgresql://catalog:catalog@localhost/catalog')`
 
   - Setup virtual Environment
-  `sudo apt-get install python-pip`
-  `sudo pip install virtualenv`
+  ```
+  sudo apt-get install python-pip
+  sudo pip install virtualenv
+  ```
   Inside /var/www/catalog/catalog
-  `sudo virtualenv venv`
-  `source venv/bin/activate`
+  ```
+  sudo virtualenv venv
+  source venv/bin/activate
+  ```
 
   - Install all python project dependencies
-  `pip install -r requirements.txt`
+  </br>`pip install -r requirements.txt`
 
 ### 7. Enable the catalog app to run instead of the default apache HTML page
 
   - Create a catalog.conf file
-  `sudo nano /etc/apache2/sites-available/catalog.conf`
+  </br>`sudo nano /etc/apache2/sites-available/catalog.conf`
 
   Paste the following code
   ```
@@ -143,8 +157,10 @@ Below, I have listed all the steps I undertook to configure this server.
   ```
 
   - Create the wsgi file
-  `cd /var/www/catalog`
-  `sudo nano catalog.wsgi`
+  ```
+  cd /var/www/catalog
+  sudo nano catalog.wsgi
+  ```
 
   - Paste the following code into the wsgi file
   ```#!/usr/bin/python
@@ -158,16 +174,18 @@ Below, I have listed all the steps I undertook to configure this server.
   ```
 
   - Enable the catalog conf file
-  `sudo a2ensite catalog`
+  </br>`sudo a2ensite catalog`
 
   - Restart the apache service
-  `sudo service apache2 restart`
+  </br>`sudo service apache2 restart`
 
 ### 8. Setup the database tables and run the application
-
-  - `cd /var/www/catalog/catalog`
-  - `python database_setup.py`
-  - `python populate_database_with_users.py`
+  
+  ```
+  cd /var/www/catalog/catalog
+  python database_setup.py
+  python populate_database_with_users.py
+  ```
 
   - You're All good to go. Go to your browser and enter the lightsail IP address.
   The app should run successfully
@@ -180,6 +198,6 @@ Below, I have listed all the steps I undertook to configure this server.
 
 ### Credits
 
-  - (xip.io)[http://xip.io/]
-  - (How To Deploy a Flask Application on an Ubuntu VPS) [https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps]
-  - (Flask Docs)[http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/]
+  - [xip.io](http://xip.io/)
+  - [How To Deploy a Flask Application on an Ubuntu VPS] (https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+  - [Flask Docs](http://flask.pocoo.org/docs/1.0/deploying/mod_wsgi/)
